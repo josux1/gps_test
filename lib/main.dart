@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() => runApp(MyApp());
+import 'package:gps_test/core/providers/providers.dart';
+import 'package:gps_test/ui/modules/car/car_screen.dart';
+import 'package:gps_test/ui/utils/app_theme.dart';
 
-class MyApp extends StatelessWidget {
+void main() => runApp(ProviderScope(child: MyApp()));
+
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeProvider);
+
     return MaterialApp(
-      title: 'Material App',
-      home: Scaffold(
-        appBar: AppBar(title: Text('Material App Bar')),
-        body: Center(child: Container(child: Text('Hello World'))),
-      ),
+      title: 'Kilometraje Wialon',
+      debugShowCheckedModeBanner: false,
+      home: CarScreen(),
+      themeMode: theme,
+      theme: AppTheme.lighTheme(),
+      darkTheme: AppTheme.darkTheme(),
     );
   }
 }
