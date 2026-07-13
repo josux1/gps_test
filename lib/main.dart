@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:gps_test/core/providers/providers.dart';
-import 'package:gps_test/ui/modules/car/car_screen.dart';
+// import 'package:gps_test/ui/modules/car/car_screen.dart';
+import 'package:gps_test/ui/modules/login/login_screen.dart';
 import 'package:gps_test/ui/utils/app_theme.dart';
 
 void main() => runApp(ProviderScope(child: MyApp()));
@@ -17,7 +18,8 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       title: 'Kilometraje Wialon',
       debugShowCheckedModeBanner: false,
-      home: CarScreen(),
+      home: LoginScreen(),
+      // home: CarScreen(),
       themeMode: theme,
       theme: AppTheme.lighTheme(),
       darkTheme: AppTheme.darkTheme(),

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gps_test/core/modules/car/wialon_car.dart';
 import 'package:gps_test/core/providers/providers.dart';
 import 'package:gps_test/core/services/app_assets.dart';
 import 'package:gps_test/ui/modules/car/controller.dart';
-import 'package:gps_test/ui/utils/app_colors.dart';
+import 'package:gps_test/ui/utils/app_string_utils.dart';
 import 'package:gps_test/ui/utils/app_textstyles.dart';
+import 'package:gps_test/ui/widgets/custom_button.dart';
 
 class CarScreen extends ConsumerStatefulWidget {
   const CarScreen({super.key});
@@ -14,6 +16,17 @@ class CarScreen extends ConsumerStatefulWidget {
 }
 
 class _CarScreenState extends ConsumerState<CarScreen> {
+  WialonCar? car;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      car = await ref.read(carControllerProvider).getCarById(context);
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = ref.watch(themeProvider);
@@ -21,9 +34,22 @@ class _CarScreenState extends ConsumerState<CarScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Wialon'),
         elevation: 0,
         surfaceTintColor: Colors.transparent,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        leading: Hero(
+          tag: 'logo',
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: Image.asset(AppAssets.appImageWialonLogo),
+              ),
+            ),
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -36,6 +62,7 @@ class _CarScreenState extends ConsumerState<CarScreen> {
         ],
       ),
       body: ListView(
+        physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.only(top: 28),
         children: [
           AnimatedSwitcher(
@@ -52,35 +79,64 @@ class _CarScreenState extends ConsumerState<CarScreen> {
                     AppAssets.appImageCarDark,
                   ),
           ),
+          Center(child: Text(car?.item.nm ?? 'car name', style: AppText.title)),
 
           Padding(
             padding: const EdgeInsets.only(top: 12),
             child: Center(
-              child: Card(
-                elevation: 0,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 12,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Card(
+                    elevation: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 12,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            AppFormat.distanceToKm(car?.item.cnm ?? 0),
+                            style: AppText.subtitle,
+                          ),
+                          Text('Kilometraje', style: AppText.text),
+                        ],
+                      ),
+                    ),
                   ),
-                  child: Text('100 km/h', style: AppTextStyles.title),
-                ),
+
+                  Card(
+                    elevation: 0,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 12,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('${car?.item.cneh} h', style: AppText.subtitle),
+                          Text('Horas de motor', style: AppText.text),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          Center(child: Text('Sin cambios', style: AppTextStyles.text)),
         ],
       ),
       bottomNavigationBar: SafeArea(
-        minimum: EdgeInsets.symmetric(horizontal: 12),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            elevation: 0,
-            shadowColor: Colors.transparent,
-            backgroundColor: AppColors.primary,
-          ),
-          onPressed: () {},
-          child: Text('Consultar kilometraje', style: AppTextStyles.textLight),
+        minimum: EdgeInsets.symmetric(horizontal: 14),
+        child: CustomPrimaryButton(
+          title: 'Consultar kilometraje',
+          onPressed: () async {
+            car = await ref.read(carControllerProvider).getCarById(context);
+            setState(() {});
+          },
         ),
       ),
     );
