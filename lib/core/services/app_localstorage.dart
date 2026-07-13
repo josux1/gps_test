@@ -22,7 +22,7 @@ class AppLocalStorage {
     }
   }
 
-  /// Recupera un valor. Requiere que especifiques el tipo esperado (ej. getValue<int>('edad')).
+  /// Recupera un valor. Requiere que especifiques el tipo esperado (ej. getValue(int)('edad')).
   static Future<T?> getValue<T>(String key) async {
     final prefs = await SharedPreferences.getInstance();
 

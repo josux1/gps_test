@@ -8,6 +8,11 @@ import 'package:gps_test/core/modules/car/wialon_car.dart';
 import 'package:gps_test/core/providers/providers.dart';
 import 'package:gps_test/ui/utils/app_toast.dart';
 
+final carByIdProvider = FutureProvider<WialonCar>((ref) async {
+  final repository = ref.watch(carRepoProvider);
+  return repository.getCarbyId();
+});
+
 final carControllerProvider = Provider<CarController>((ref) {
   final carRepo = ref.watch(carRepoProvider);
   return CarController(ref: ref, repository: carRepo);

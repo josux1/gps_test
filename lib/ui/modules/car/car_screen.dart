@@ -16,21 +16,31 @@ class CarScreen extends ConsumerStatefulWidget {
 }
 
 class _CarScreenState extends ConsumerState<CarScreen> {
-  WialonCar? car;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      car = await ref.read(carControllerProvider).getCarById(context);
-      setState(() {});
-    });
-  }
+  WialonCar? _previousCar;
+  String? _legend;
 
   @override
   Widget build(BuildContext context) {
     final theme = ref.watch(themeProvider);
     final size = MediaQuery.of(context).size;
+
+    ref.listen<AsyncValue<WialonCar>>(carByIdProvider, (previous, next) {
+      next.whenData((newCar) {
+        setState(() {
+          if (_previousCar == null) {
+            _legend = null;
+          } else if (_previousCar!.toRawJson() != newCar.toRawJson()) {
+            _legend = 'Los datos cambiaron';
+          } else {
+            _legend = 'Los datos se mantienen iguales';
+          }
+          _previousCar = newCar;
+        });
+      });
+    });
+
+    final carAsync = ref.watch(carByIdProvider);
+    final car = carAsync.value ?? _previousCar;
 
     return Scaffold(
       appBar: AppBar(
@@ -127,15 +137,40 @@ class _CarScreenState extends ConsumerState<CarScreen> {
               ),
             ),
           ),
+          if (_legend != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Center(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: Row(
+                    key: ValueKey(_legend),
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        _legend == 'Los datos cambiaron'
+                            ? Icons.autorenew_rounded
+                            : Icons.check_circle_outline_rounded,
+                        size: 18,
+                        color: _legend == 'Los datos cambiaron'
+                            ? Colors.orange
+                            : Colors.green,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(_legend!, style: AppText.text),
+                    ],
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
       bottomNavigationBar: SafeArea(
         minimum: EdgeInsets.symmetric(horizontal: 14),
         child: CustomPrimaryButton(
           title: 'Consultar kilometraje',
-          onPressed: () async {
-            car = await ref.read(carControllerProvider).getCarById(context);
-            setState(() {});
+          onPressed: () {
+            ref.invalidate(carByIdProvider);
           },
         ),
       ),
