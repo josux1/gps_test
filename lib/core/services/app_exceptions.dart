@@ -2,7 +2,7 @@ class WialonException implements Exception {
   final int code;
   WialonException(this.code);
 
-  /// Errores recuperables con un re-login.
+  /// Possible Errors in a re-login.
   bool get isSessionError => code == 1 || code == 1011;
 
   @override

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:animate_do/animate_do.dart';
 
+import 'package:gps_test/core/services/services.dart';
 import 'package:gps_test/ui/modules/login/controller.dart';
 import 'package:gps_test/ui/utils/utils.dart';
-import 'package:gps_test/core/services/app_assets.dart';
-import 'package:gps_test/ui/widgets/custom_loading_button.dart';
+import 'package:gps_test/ui/widgets/widgets.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});

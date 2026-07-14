@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:gps_test/core/modules/car/wialon_car.dart';
 import 'package:gps_test/core/providers/providers.dart';
-import 'package:gps_test/core/services/app_assets.dart';
 import 'package:gps_test/ui/modules/car/controller.dart';
-import 'package:gps_test/ui/utils/app_string_utils.dart';
-import 'package:gps_test/ui/utils/app_textstyles.dart';
-import 'package:gps_test/ui/widgets/custom_loading_button.dart';
+
+import 'package:gps_test/core/services/services.dart';
+import 'package:gps_test/ui/utils/utils.dart';
+import 'package:gps_test/ui/widgets/widgets.dart';
 
 class CarScreen extends ConsumerStatefulWidget {
   const CarScreen({super.key});

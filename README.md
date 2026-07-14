@@ -45,13 +45,6 @@ flutter pub get
 flutter run
 ```
 
-## Comandos útiles
-
-```bash
-flutter analyze   # Análisis estático
-flutter test      # Tests
-```
-
 ## Notas
 
 - El token de Wialon, el `unitId` y los `flags` están hardcodeados en `lib/core/modules/car/repository.dart` por simplicidad. En un proyecto real deberían moverse a un archivo `.env` o a configuración segura.

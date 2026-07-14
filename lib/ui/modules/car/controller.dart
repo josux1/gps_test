@@ -1,15 +1,16 @@
-import 'dart:developer';
-
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+
+import 'dart:developer';
 import 'package:gps_test/core/modules/car/repository.dart';
 import 'package:gps_test/core/modules/car/wialon_car.dart';
-import 'package:gps_test/core/providers/providers.dart';
-import 'package:gps_test/core/services/app_exceptions.dart';
 import 'package:gps_test/ui/modules/login/login_screen.dart';
-import 'package:gps_test/ui/utils/app_toast.dart';
+
+import 'package:gps_test/core/providers/providers.dart';
+import 'package:gps_test/core/services/services.dart';
+import 'package:gps_test/ui/utils/utils.dart';
 
 final carByIdProvider = FutureProvider<WialonCar>((ref) async {
   final repository = ref.watch(carRepoProvider);

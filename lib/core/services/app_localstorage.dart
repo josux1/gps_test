@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppLocalStorage {
   AppLocalStorage._();
 
-  /// Guarda un valor genérico. Retorna [true] si se guardó con éxito.
+  /// Save a generic value. Return true if succes
   static Future<bool> saveValue<T>(String key, T value) async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -22,11 +22,11 @@ class AppLocalStorage {
     }
   }
 
-  /// Recupera un valor. Requiere que especifiques el tipo esperado (ej. getValue(int)('edad')).
+  /// Get a value
   static Future<T?> getValue<T>(String key) async {
     final prefs = await SharedPreferences.getInstance();
 
-    // El método .get() devuelve un Object?, así que simplemente lo casteamos al tipo T
+    // Casting fron Object? to T?
     return prefs.get(key) as T?;
   }
 }
