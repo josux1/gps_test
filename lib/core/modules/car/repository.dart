@@ -39,8 +39,9 @@ class CarRepository {
 
       // if the response contains an error, throw an exception
       if (data.containsKey('error')) {
-        log(data.toString());
-        throw WialonException(data['error'] as int);
+        final ex = WialonException(data['error'] as int);
+        log(ex.toString());
+        throw ex;
       }
 
       //2.- parse to dart object and return it
@@ -73,8 +74,9 @@ class CarRepository {
 
       // if the response contains an error, throw an exception
       if (data.containsKey('error')) {
-        log(data.toString());
-        throw WialonException(data['error'] as int);
+        final ex = WialonException(data['error'] as int);
+        log(ex.toString());
+        throw ex;
       }
 
       //3.- parse to dart object and return it
