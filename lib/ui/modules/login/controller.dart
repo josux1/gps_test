@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gps_test/core/modules/car/repository.dart';
 import 'package:gps_test/core/providers/providers.dart';
+import 'package:gps_test/core/services/app_exceptions.dart';
 import 'package:gps_test/core/services/app_localstorage.dart';
 import 'package:gps_test/ui/modules/car/car_screen.dart';
 import 'package:gps_test/ui/utils/app_toast.dart';
@@ -52,6 +53,14 @@ class LoginController {
       Navigator.pushReplacement(
         context,
         CupertinoPageRoute(builder: (context) => CarScreen()),
+      );
+    } on WialonException catch (exp) {
+      if (!context.mounted) return;
+      AppToast.showMessage(
+        context,
+        title: 'error',
+        subtitle: exp.toString(),
+        type: ToastTypes.error,
       );
     } catch (error) {
       log('Error: ${error.toString()}');

@@ -6,7 +6,7 @@ import 'package:gps_test/core/services/app_assets.dart';
 import 'package:gps_test/ui/modules/car/controller.dart';
 import 'package:gps_test/ui/utils/app_string_utils.dart';
 import 'package:gps_test/ui/utils/app_textstyles.dart';
-import 'package:gps_test/ui/widgets/custom_button.dart';
+import 'package:gps_test/ui/widgets/custom_loading_button.dart';
 
 class CarScreen extends ConsumerStatefulWidget {
   const CarScreen({super.key});
@@ -25,6 +25,10 @@ class _CarScreenState extends ConsumerState<CarScreen> {
     final size = MediaQuery.of(context).size;
 
     ref.listen<AsyncValue<WialonCar>>(carByIdProvider, (previous, next) {
+      if (next.hasError && !next.isLoading) {
+        ref.read(carControllerProvider).handleCarError(context, next.error!);
+        return;
+      }
       next.whenData((newCar) {
         setState(() {
           if (_previousCar == null) {
@@ -61,12 +65,13 @@ class _CarScreenState extends ConsumerState<CarScreen> {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              ref.read(carControllerProvider).toggleTheme();
-            },
-            icon: Icon(
-              theme == ThemeMode.light ? Icons.mode_night_rounded : Icons.sunny,
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: CircleAvatar(
+              child: IconButton(
+                onPressed: () => _showProfile(),
+                icon: Icon(Icons.person),
+              ),
             ),
           ),
         ],
@@ -167,13 +172,51 @@ class _CarScreenState extends ConsumerState<CarScreen> {
       ),
       bottomNavigationBar: SafeArea(
         minimum: EdgeInsets.symmetric(horizontal: 14),
-        child: CustomPrimaryButton(
+        child: CustomLoadingButton(
           title: 'Consultar kilometraje',
           onPressed: () {
             ref.invalidate(carByIdProvider);
           },
         ),
       ),
+    );
+  }
+
+  void _showProfile() {
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      builder: (context) {
+        final isDark = ref.watch(themeProvider) == ThemeMode.dark;
+        final switchTileTitle = isDark ? 'Tema Oscuro' : 'Tema claro';
+
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircleAvatar(
+                radius: 40,
+                child: IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.person, size: 40),
+                ),
+              ),
+
+              Text('Invitado', style: AppText.title),
+
+              SwitchListTile(
+                value: ref.read(themeProvider) == ThemeMode.dark,
+                onChanged: (value) {
+                  ref.read(carControllerProvider).toggleTheme();
+                },
+                title: Text(switchTileTitle),
+                subtitle: Text('Cambia el tema de la app'),
+                secondary: Icon(isDark ? Icons.dark_mode_rounded : Icons.sunny),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
